@@ -4,20 +4,24 @@ pipeline {
     stages {
         stage('Cloner le dépôt') {
             steps {
-                git 'https://github.com/ahmedenzo/pipefront.git'  // Remplacez par l'URL de votre dépôt Git
+                // Clone the repository. Replace with the correct repository URL if necessary.
+                git url: 'https://github.com/ahmedenzo/pipefront.git', branch: 'master'
             }
         }
 
         stage('Construire les images Docker') {
             steps {
-                sh 'docker-compose build'  // Construit les images sans lancer les conteneurs
+                // Build the Docker images using docker-compose (without launching containers)
+                sh 'docker-compose build'
             }
         }
 
         stage('Sauvegarder les images en local') {
             steps {
-                sh 'docker save -o angular-app.tar angular-app:latest'  // Sauvegarde de l'image Angular
-                sh 'docker save -o nginx.tar nginx:latest'              // Sauvegarde de l'image Nginx
+                // Save the Docker images to tar files
+                sh 'docker save -o angular-app.tar angular-app:latest'  // Save the Angular image
+                sh 'docker save -o nginx.tar nginx:latest'              // Save the Nginx image
+                // Archive the tar files as artifacts
                 archiveArtifacts artifacts: '*.tar', allowEmptyArchive: false
             }
         }
@@ -30,6 +34,5 @@ pipeline {
         failure {
             echo 'Échec de la construction ou de la sauvegarde des images.'
         }
-    
     }
 }
