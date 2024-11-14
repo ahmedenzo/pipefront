@@ -19,9 +19,6 @@ RUN npm run build --prod
 # Étape 2 : Serveur de production avec Nginx
 FROM nginx:alpine
 
-# Copier le fichier de configuration Nginx (facultatif)
-COPY ./nginx.conf /etc/nginx/nginx.conf
-
 # Copier les fichiers construits d'Angular dans le répertoire de Nginx
 COPY --from=build /app/dist/ /usr/share/nginx/html
 
