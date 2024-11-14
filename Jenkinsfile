@@ -19,7 +19,7 @@ pipeline {
         stage('Sauvegarder les images en local') {
             steps {
                 // Save the Docker images to tar files
-                sh 'docker save -o angular-app.tar angular-app:latest'  // Save the Angular image
+                sh 'docker save -o angular-app.tar pipefront-angular-app:latest'  // Save the Angular image
                 sh 'docker save -o nginx.tar nginx:latest'              // Save the Nginx image
                 // Archive the tar files as artifacts
                 archiveArtifacts artifacts: '*.tar', allowEmptyArchive: false
