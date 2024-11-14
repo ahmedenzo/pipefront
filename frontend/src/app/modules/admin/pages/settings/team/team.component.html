@@ -1,0 +1,38 @@
+<div class="w-full max-w-3xl">
+
+    <!-- Team members -->
+    <div class="flex flex-col mt-8 divide-y border-t border-b">
+        <ng-container *ngFor="let member of admins; trackBy: trackByFn;">
+            <div class="flex flex-col sm:flex-row sm:items-center py-6">
+                <div class="flex items-center">
+                    <div class="flex flex-0 items-center justify-center w-10 h-10 rounded-full overflow-hidden">
+                        <ng-container *ngIf="member.bank?.logo; else noLogo">
+                            <img [src]="'data:image/png;base64,' + member.bank.logo" class="logo-img" />
+                        </ng-container>
+                        <ng-template #noLogo>
+                            <div class="flex items-center justify-center w-full h-full rounded-full text-lg uppercase bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200">
+                                <!-- Optionally, add some initials or a placeholder icon -->
+                            </div>
+                        </ng-template>
+                        
+                    </div>
+                    <div class="ml-4">
+                        <div class="font-medium">{{member.username}}</div>
+                        <div class="text-secondary">{{member.email}}</div>
+                        <div class="text-secondary">{{member.phoneNumber}}</div>
+                    </div>
+                </div>
+                <div class="flex items-center mt-6 md:mt-0 sm:ml-auto">
+                    <div class="order-1 sm:order-2 sm:ml-3">
+                        <mat-slide-toggle 
+                            [checked]="member.active" 
+                            (change)="toggleActive(member)">
+                            {{ member.active ? 'Active' : 'Inactive' }}
+                        </mat-slide-toggle>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+
+</div>

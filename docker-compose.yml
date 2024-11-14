@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+
+  angular-app:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: angular-app
+    ports:
+      - "4200:80"
+    restart: unless-stopped
+    networks:
+      - my_network
+
+  nginx:
+    image: nginx
+    container_name: nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - angular-app
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    restart: unless-stopped
+    networks:
+      - my_network
+
+networks:
+  my_network:

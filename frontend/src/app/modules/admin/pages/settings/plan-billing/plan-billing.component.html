@@ -1,0 +1,328 @@
+<div class="w-full max-w-3xl">
+    <div class="w-full max-w-3xl"></div>
+    <div>
+        <fuse-alert *ngIf="successMessage" [type]="'success'" [appearance]="'outline'">
+            <span fuseAlertTitle>Success</span>
+            {{ successMessage }}
+        </fuse-alert>
+    
+        <fuse-alert *ngIf="errorMessage" [type]="'warn'" [appearance]="'outline'">
+            <span fuseAlertTitle>Warn alert</span>
+            {{ errorMessage }}
+        </fuse-alert>
+
+        <fuse-alert *ngIf="successMessageupdate" [type]="'info'" [appearance]="'outline'">
+            <span fuseAlertTitle>Info alert</span>
+            {{ successMessageupdate }}
+        </fuse-alert>
+    
+        <fuse-alert *ngIf="successMessagedelete" [type]="'warning'" [appearance]="'outline'">
+            <span fuseAlertTitle>Warning alert</span>
+            {{ successMessagedelete }}
+        </fuse-alert>
+  
+    </div>
+    <!-- Form -->
+    <form #accountFormRef [formGroup]="accountForm">
+
+
+        <div class="w-full">
+            <div class="text-xl">Create Bins</div>
+            <div class="text-secondary">Create Bins Card For Each Bank</div>
+        </div>
+
+
+
+        <div class="grid sm:grid-cols-5 gap-6 w-full mt-3">
+            <!-- Email -->
+           <!-- BIN Field -->
+<div class="sm:col-span-2">
+    <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+        <mat-label>BIN</mat-label>
+        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:credit-card'" matPrefix></mat-icon>
+        <input 
+            [formControlName]="'bin'" 
+            matInput 
+            type="text" 
+            maxlength="8" 
+            pattern="^[459]\d{0,7}$" 
+            placeholder="BIN must be up to 8 digits" />
+        <mat-error *ngIf="accountForm.get('bin')?.hasError('required') && accountForm.get('bin')?.touched">
+            BIN is required
+        </mat-error>
+        <mat-error *ngIf="accountForm.get('bin')?.hasError('pattern') && accountForm.get('bin')?.touched">
+            BIN must start with 4, 5, or 9 and be up to 8 digits long
+        </mat-error>
+    </mat-form-field>
+</div>
+
+<!-- System Code Field -->
+<div class="sm:col-span-2">
+    <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+        <mat-label>System Code</mat-label>
+        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:cog'" matPrefix></mat-icon>
+        <input 
+            [formControlName]="'systemCode'" 
+            matInput 
+            type="text" 
+            maxlength="1" 
+            pattern="^[123]$" 
+            placeholder="System Code must be 1, 2, or 3" />
+        <mat-error *ngIf="accountForm.get('systemCode')?.hasError('required') && accountForm.get('systemCode')?.touched">
+            System Code is required
+        </mat-error>
+        <mat-error *ngIf="accountForm.get('systemCode')?.hasError('pattern') && accountForm.get('systemCode')?.touched">
+            System Code must be 1, 2, or 3
+        </mat-error>
+        <mat-error *ngIf="accountForm.hasError('systemCodeInvalid') && accountForm.get('systemCode')?.touched">
+            System Code does not match the BIN logic
+        </mat-error>
+    </mat-form-field>
+</div>
+
+<!-- Card Type Field -->
+<div class="sm:col-span-2">
+    <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+        <mat-label>Card Type</mat-label>
+        <mat-icon class="icon-size-5" svgIcon="feather:credit-card" matPrefix></mat-icon>
+        <input 
+            [formControlName]="'cardType'" 
+            matInput 
+            type="text" 
+            maxlength="3" 
+            pattern="^\d{3}$" 
+            placeholder="Card Type must be exactly 3 digits" />
+        <mat-error *ngIf="accountForm.get('cardType')?.hasError('required') && accountForm.get('cardType')?.touched">
+            Card Type is required
+        </mat-error>
+        <mat-error *ngIf="accountForm.get('cardType')?.hasError('pattern') && accountForm.get('cardType')?.touched">
+            Card Type must be exactly 3 digits
+        </mat-error>
+    </mat-form-field>
+</div>
+
+<!-- Service Code Field -->
+<div class="sm:col-span-2">
+    <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+        <mat-label>Service Code</mat-label>
+        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:shield-check'" matPrefix></mat-icon>
+        <input 
+            [formControlName]="'serviceCode'" 
+            matInput 
+            type="text" 
+            maxlength="3" 
+            pattern="^\d{3}$" 
+            placeholder="Service Code must be exactly 3 digits" />
+        <mat-error *ngIf="accountForm.get('serviceCode')?.hasError('required') && accountForm.get('serviceCode')?.touched">
+            Service Code is required
+        </mat-error>
+        <mat-error *ngIf="accountForm.get('serviceCode')?.hasError('pattern') && accountForm.get('serviceCode')?.touched">
+            Service Code must be exactly 3 digits
+        </mat-error>
+    </mat-form-field>
+</div>
+
+<!-- Key Data A Field -->
+<div class="sm:col-span-2">
+    <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+        <mat-label>Key Data A</mat-label>
+        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:shield-check'" matPrefix></mat-icon>
+        <input 
+            [formControlName]="'keyDataA'" 
+            matInput 
+            type="text" 
+            maxlength="16" 
+            minlength="16" 
+            pattern="^[0-9A-Fa-f]{16}$" 
+            placeholder="16-character hexadecimal string" />
+        <mat-error *ngIf="accountForm.get('keyDataA')?.hasError('required') && accountForm.get('keyDataA')?.touched">
+            Key Data A is required
+        </mat-error>
+        <mat-error *ngIf="accountForm.get('keyDataA')?.hasError('pattern') && accountForm.get('keyDataA')?.touched">
+            Key Data A must be a 16-character hexadecimal string
+        </mat-error>
+    </mat-form-field>
+</div>
+
+<!-- Key Data B Field -->
+<div class="sm:col-span-2">
+    <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+        <mat-label>Key Data B</mat-label>
+        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:shield-check'" matPrefix></mat-icon>
+        <input 
+            [formControlName]="'keyDataB'" 
+            matInput 
+            type="text" 
+            maxlength="16" 
+            minlength="16" 
+            pattern="^[0-9A-Fa-f]{16}$" 
+            placeholder="16-character hexadecimal string" />
+        <mat-error *ngIf="accountForm.get('keyDataB')?.hasError('required') && accountForm.get('keyDataB')?.touched">
+            Key Data B is required
+        </mat-error>
+        <mat-error *ngIf="accountForm.get('keyDataB')?.hasError('pattern') && accountForm.get('keyDataB')?.touched">
+            Key Data B must be a 16-character hexadecimal string
+        </mat-error>
+    </mat-form-field>
+</div>
+
+
+            <div class="sm:col-span-2">
+                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label>Bank</mat-label>
+                    <mat-icon svgIcon="heroicons_outline:building-library"></mat-icon>
+                    
+                    <!-- If in editing mode, show the input, otherwise show select box -->
+                    <ng-container *ngIf="isEditing; else selectBank">
+                        <input 
+                            matInput 
+                            [value]="getBankName(selectedBin)" 
+                            disabled 
+                        />
+                    </ng-container>
+                    
+                    <ng-template #selectBank>
+                        <mat-select [formControlName]="'bankId'">
+                            <mat-option *ngFor="let bank of banks" [value]="bank.id">
+                                {{ bank.name }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="accountForm.get('bankId').hasError('required') && accountForm.get('bankId').touched">
+                            Bank is required
+                        </mat-error>
+                    </ng-template>
+                </mat-form-field>
+            
+           
+            </div>
+            
+            
+            
+  
+            
+            
+            
+            
+        </div>
+        <div  class="flex items-center justify-end mt-6">
+            <button
+            class="ml-4"
+                mat-stroked-button
+                type="button"
+                (click)="onCancel()">
+                Cancel
+            </button>
+            <button
+                class="ml-4"
+                mat-flat-button
+                type="button"
+                [color]="'primary'"
+                [disabled]="accountForm.invalid"
+                (click)="isEditMode ? updateBin() : createBin()">
+                {{ isEditMode ? 'Update Bin' : 'Create Bin' }}
+            </button>
+        </div>
+        
+        <div class="mt-11 mb-10 border-t"></div>
+
+    </form>
+</div>
+<div class="w-full p-4 flex items-center">
+    <!-- Search Input Field with Bottom Spacing -->
+    <mat-form-field
+        class="fuse-mat-dense fuse-mat-rounded min-w-64"  
+        [subscriptSizing]="'dynamic'"
+        style="margin-bottom: 20px; width: 300px; margin-right: 20px;"> <!-- Added margin-right for spacing -->
+        <mat-icon
+            class="icon-size-5"
+            matPrefix
+            [svgIcon]="'heroicons_solid:magnifying-glass'"></mat-icon>
+        <input
+            matInput
+            (keyup)="applyFilter($event)"
+            [autocomplete]="'off'"
+            [placeholder]="'Search'">
+    </mat-form-field>
+
+    <!-- Bank Code Select Dropdown with Bottom Spacing -->
+    <mat-form-field
+        class="fuse-mat-dense fuse-mat-rounded min-w-64 search-field"
+        [subscriptSizing]="'dynamic'"
+        style="margin-bottom: 20px; width: 300px;"> <!-- No need for margin-right on this element -->
+        <mat-select placeholder="Select Bank Code" (selectionChange)="filterByBankCode($event.value)">
+            <!-- Option to reset the filter and show all data -->
+            <mat-option [value]="'all'">All</mat-option>
+            <mat-option *ngFor="let bank of uniqueBankCodes" [value]="bank">
+                {{ bank }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+</div>
+
+
+  
+<div class="mat-elevation-z8 rounded-lg overflow-hidden">
+    <!-- Global Search Field -->
+
+    <div class="mat-elevation-z8 rounded-lg overflow-hidden table-container">
+        <!-- Table -->
+        <table mat-table [dataSource]="dataSource" matSort class="mat-table-custom">
+
+            <!-- Columns -->
+            <ng-container matColumnDef="bin">
+                <mat-header-cell *matHeaderCellDef mat-sort-header class="table-header">BIN</mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.bin}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="systemCode">
+                <mat-header-cell *matHeaderCellDef mat-sort-header class="table-header">System Code</mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.systemCode}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="cardType">
+                <mat-header-cell *matHeaderCellDef mat-sort-header class="table-header">Card Type</mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.cardType}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="serviceCode">
+                <mat-header-cell *matHeaderCellDef mat-sort-header class="table-header">Service Code</mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.serviceCode}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="bankCode">
+                <mat-header-cell *matHeaderCellDef mat-sort-header class="table-header">bankName</mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.bankName}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="bankName">
+                <mat-header-cell *matHeaderCellDef mat-sort-header class="table-header">Bank Name</mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.bankName}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+                <mat-header-cell *matHeaderCellDef> Actions </mat-header-cell>
+                <mat-cell *matCellDef="let item">
+                    <div class="actions-container" style="display: flex; align-items: center; gap: 8px;"> 
+                        <button mat-icon-button color="primary" (click)="onEdit(item)">
+                            <mat-icon>edit</mat-icon> 
+                        </button>
+                        <button mat-icon-button color="warn"  (click)="onDelete(item.id, item.bin)"> 
+                            <mat-icon>delete</mat-icon> 
+                        </button>
+                    </div>
+                </mat-cell>
+            </ng-container>
+            
+            
+            <!-- Header and Row -->
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        </table>
+
+        <!-- Paginator -->
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    </div>
+</div>
+
+
+

@@ -1,0 +1,141 @@
+<!-- Loading bar -->
+<fuse-loading-bar></fuse-loading-bar>
+
+<!-- Navigation -->
+<fuse-vertical-navigation
+    class="dark bg-gray-700 print:hidden"
+    [mode]="isScreenSmall ? 'over' : 'side'"
+    [name]="'mainNavigation'"
+    [navigation]="navigation.default"
+    [opened]="!isScreenSmall">
+    <!-- Navigation header hook -->
+    <ng-container fuseVerticalNavigationContentHeader>
+        <div class="flex items-center w-full p-4 pl-6">
+            <!-- Logo -->
+            <div class="flex items-center justify-center">
+                <img
+                    class="w-25"
+                    src="assets\images\logo\tm.png">
+            </div>
+            <!-- Components -->
+            <div class="flex items-center ml-auto">
+       
+                <user [showAvatar]="false"></user>
+            </div>
+        </div>
+        <!-- User -->
+<!-- User -->
+<div class="flex flex-col items-center w-full p-4">
+    <div class="relative w-24 h-24">
+        <img
+            class="w-full h-full rounded-full"
+            [src]="(role.includes('ROLE_ADMIN') || role.includes('ROLE_USER')) && bankLogo ? 'data:image/png;base64,' + bankLogo : 'assets/images/logo/logomonetique.jpg'"
+            alt="User avatar">
+    </div>
+    <div class="flex flex-col items-center justify-center w-full mt-4">
+        <div class="w-full whitespace-nowrap text-ellipsis overflow-hidden text-center leading-normal font-medium">
+
+            <!-- Super Admin Section -->
+            <h2 *ngIf="role.includes('ROLE_SUPER_ADMIN')">SuperAdmin: MonetiqueTunisie</h2>
+
+            <!-- Admin Section -->
+            <h2 *ngIf="role.includes('ROLE_ADMIN')">Admin: {{ bankName }}</h2>
+
+            <!-- User (Agent) Section -->
+<div class="info-container" *ngIf="role.includes('ROLE_USER')" >
+  <div *ngIf="role.includes('ROLE_USER')" class="info-item">
+    <h2 class="info-title">Bank:</h2>
+    <p class="info-detail">{{ bankName }}</p>
+  </div>
+
+  <div *ngIf="role.includes('ROLE_USER')" class="info-item">
+    <h2 class="info-title">Agency:</h2>
+    <p class="info-detail">{{ agencyName }}</p>
+  </div>
+
+  <div *ngIf="role.includes('ROLE_USER')" class="info-item">
+    <h2 class="info-title">Agency Code:</h2>
+    <p class="info-detail">{{ agencyCode }}</p>
+  </div>
+</div>
+
+
+        </div>
+    </div>
+</div>
+
+
+        
+    </ng-container>
+    <!-- Navigation footer hook -->
+    <ng-container fuseVerticalNavigationContentFooter>
+        <div class="flex flex-0 items-center justify-center h-16 pr-6 pl-2 mt-2 mb-4 opacity-12">
+            <img
+                class="max-w-36"
+                src="assets\images\logo\tm.png">
+        </div>
+    </ng-container>
+</fuse-vertical-navigation>
+
+<!-- Wrapper -->
+<div class="flex flex-col flex-auto w-full min-w-0">
+
+    <!-- Header -->
+    <div class="relative flex flex-0 items-center w-full h-16 px-4 md:px-6 z-49 shadow dark:shadow-none dark:border-b bg-card dark:bg-transparent print:hidden">
+        <!-- Navigation toggle button -->
+
+        <!-- Components -->
+
+    </div>
+
+    <!-- Content -->
+    <div class="flex flex-col flex-auto">
+        <!-- *ngIf="true" hack is required here for router-outlet to work correctly.
+             Otherwise, layout changes won't be registered and the view won't be updated! -->
+        <router-outlet *ngIf="true"></router-outlet>
+    </div>
+
+    <!-- Footer -->
+    <!--<div class="relative flex flex-0 items-center justify-start w-full h-14 px-4 md:px-6 z-49 border-t bg-card dark:bg-transparent print:hidden">
+        <span class="font-medium text-secondary">Fuse &copy; {{currentYear}}</span>
+    </div>-->
+
+</div>
+
+<!-- Quick chat -->
+
+
+
+<style>
+    .info-container {
+      padding: 10px;
+      background-color: #f4f4f4; /* Subtle background color */
+      border-radius: 5px; /* Slightly smaller rounded corners */
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Lighter shadow */
+      max-width: 400px; /* Smaller width for compact layout */
+      margin: 10px auto; /* Center and reduce margin */
+      font-size: 14px; /* Smaller font size */
+    }
+  
+    .info-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px; /* Less margin between items */
+    }
+  
+    .info-title {
+      font-size: 14px;
+      font-weight: 500; /* Lighter weight for titles */
+      color: #222; /* Darker gray for the title */
+    }
+  
+    .info-detail {
+      font-size: 14px;
+      font-weight: 400; /* Normal weight for details */
+      color: #444; /* Softer color for the details */
+    }
+  
+    h2, p {
+      margin: 0; /* Remove default margin */
+    }
+  </style>

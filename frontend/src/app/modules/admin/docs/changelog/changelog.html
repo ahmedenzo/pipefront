@@ -1,0 +1,187 @@
+<div class="flex flex-col flex-auto min-w-0">
+
+<!-- Header -->
+<div class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-3 sm:py-4 sm:px-4 border-b bg-card dark:bg-transparent">
+    <div class="flex-1 min-w-0">
+        <!-- Breadcrumbs -->
+        <div class="flex flex-wrap items-center font-medium">
+            <a class="whitespace-nowrap text-primary-500">Pin Sender Section</a>
+        </div>
+        <!-- Title -->
+ 
+    </div>
+</div>
+
+
+    <div class="flex-auto  p-4 sm:p-4 ">
+        <div class="prose prose-sm max-w-3xl">
+            <ng-container >
+                <div class="mb-12 p-8 rounded-2xl shadow bg-card">
+
+
+                    <div>
+
+                        <fuse-alert
+                        *ngIf="!otpSent"
+                        [appearance]="'border'"
+                        [type]="'info'">
+                        Enter the card number, the national ID, and the phone number.<br/>
+                        Click "Send OTP" to receive a one-time password (OTP) on your phone.
+                      </fuse-alert>
+
+                      <fuse-alert
+                      *ngIf="otpSent"
+                      [appearance]="'border'"
+                      [type]="'info'">
+                      Enter the OTP received in the designated field.<br/>
+                      After successful OTP verification, the card's PIN code will be sent to the phone number.
+                    </fuse-alert>
+                    
+                      
+                    <fuse-alert *ngIf="successMessage" [type]="'success'" [appearance]="'outline'">
+                        <span fuseAlertTitle>Success</span>
+                        {{ successMessage }}
+                    </fuse-alert>
+                
+            
+                    <fuse-alert *ngIf="errorMessage" [type]="'warn'" [appearance]="'outline'">
+                        <span fuseAlertTitle>Warn alert</span>
+                        {{ errorMessage }}
+                    </fuse-alert>
+
+
+                    <fuse-alert *ngIf="successMessage1" [type]="'success'" [appearance]="'outline'">
+                        <span fuseAlertTitle>Success</span>
+                        {{ successMessage1 }}
+                    </fuse-alert>
+                
+            
+                    <fuse-alert *ngIf="errorMessage1" [type]="'warn'" [appearance]="'outline'">
+                        <span fuseAlertTitle>Warn alert</span>
+                        {{ errorMessage1 }}
+                    </fuse-alert>
+                    
+                 
+
+                    </div>
+
+
+
+                    <hr class="mt-6">
+
+
+
+
+                    <ng-container>
+      
+
+                        <div class="flex flex-col items-center justify-center w-full sm:w-2/3 sm:order-1">
+                            <!-- OTP Verification Form -->
+                            <ng-container *ngIf="otpSent && !otpVerified; else cardholderForm">
+                                <form [formGroup]="otpFormGroup" (ngSubmit)="verifyOtp()" class="otp-form-style border-skyblue">
+                                    <div class="flex justify-end mb-4">
+                                        <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none" (click)="cancelOtp()">
+                                            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <div class="flex flex-col items-center">
+                                        <h2>Verify Your Code</h2>
+                                        <p class="text-gray-600">Please enter the 4 digit code sent to {{ gsm }}</p>
+                                        <div class="flex space-x-2 mt-4">
+                                            <!-- Four OTP inputs -->
+                                            <input type="text" maxlength="1" class="otp-input-modern" formControlName="otp1" appOtpInput>
+                                            <input type="text" maxlength="1" class="otp-input-modern" formControlName="otp2" appOtpInput>
+                                            <input type="text" maxlength="1" class="otp-input-modern" formControlName="otp3" appOtpInput>
+                                            <input type="text" maxlength="1" class="otp-input-modern" formControlName="otp4" appOtpInput>
+                                        </div>
+                                        <div class="flex justify-center mt-6">
+                                            <button type="submit" [disabled]="!otpFormGroup.valid" class="modern-button">
+                                                Verify OTP
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </ng-container>
+                        
+                        
+                            
+                            <!-- Cardholder Form -->
+                            <ng-template #cardholderForm>
+                                <form [formGroup]="firstFormGroup" (ngSubmit)="verifyCardholder()" 
+                                      class="flex flex-col mt-8 p-12 pb-4 bg-silver border-skyblue rounded-2xl shadow overflow-hidden w-full max-w-2xl">
+                                    <div class="flex w-full gap-4">
+                                        <div class="flex-80">
+                                            <mat-form-field class="w-full">
+                                                <mat-label>Card Number</mat-label>
+                                                <mat-icon matPrefix>credit_card</mat-icon>
+                                                <input matInput formControlName="cardNumber" autocomplete="off"  placeholder="Enter your 16-digit card number" class="bigger-input" appCardNumberFormat>
+                                                <mat-error *ngIf="firstFormGroup.controls.cardNumber.hasError('required')">Card Number is required</mat-error>
+                                                <mat-error *ngIf="firstFormGroup.controls.cardNumber.hasError('pattern')">Card Number must be 16 digits and valid</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="flex-20">
+                                            <mat-form-field class="w-full">
+                                                <mat-label>Expiration</mat-label>
+                                                <input matInput formControlName="finalDate" autocomplete="off"  placeholder="MM/YY" class="bigger-input" maxlength="5" (input)="formatExpiration($event)">
+                                                <mat-error *ngIf="firstFormGroup.controls.finalDate.hasError('required')">Expiration date is required</mat-error>
+                                                <mat-error *ngIf="firstFormGroup.controls.finalDate.hasError('invalidMonth')">Month must be between 01 and 12</mat-error>
+                                                <mat-error *ngIf="firstFormGroup.controls.finalDate.hasError('invalidYear')">Year must be valid</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                            
+                                    <div class="form-group mt-4">
+                                        <mat-form-field class="w-full">
+                                            <mat-label>CIN</mat-label>
+                                            <mat-icon matPrefix>badge</mat-icon>
+                                            <input matInput formControlName="nationalId" autocomplete="off"  placeholder="Enter your 8-digit CIN" class="bigger-input" maxlength="8">
+                                            <mat-error *ngIf="firstFormGroup.controls.nationalId.hasError('required')">CIN is required</mat-error>
+                                            <mat-error *ngIf="firstFormGroup.controls.nationalId.hasError('pattern')">CIN must be 8 digits</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                            
+                                    <div class="form-group mt-4">
+                                        <mat-form-field class="w-full">
+                                            <mat-label>Phone Number</mat-label>
+                                            <mat-icon matPrefix>phone</mat-icon>
+                                            <div class="flex">
+                                                <span class="inline-flex items-center px-3 text-gray-500 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md">+216</span>
+                                                <input matInput formControlName="gsm" autocomplete="off"  placeholder="Enter your 8-digit phone number" class="rounded-r-md bigger-input" maxlength="8">
+                                            </div>
+                                            <mat-error *ngIf="firstFormGroup.controls.gsm.hasError('required')">Phone Number is required</mat-error>
+                                            <mat-error *ngIf="firstFormGroup.controls.gsm.hasError('pattern')">Phone Number must be 8 digits</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                            
+                                    <div class="flex justify-center mt-4">
+                                        <button mat-raised-button color="primary" class="smaller-button" type="submit" [disabled]="!firstFormGroup.valid">Send OTP</button>
+                                    </div>
+                                </form>
+                            </ng-template>
+                            
+                            <style>
+                          
+                                .border-skyblue {
+                                    border: 2px solid #87CEEB; /* Sky blue border */
+                                }
+                            </style>
+                            
+                        </div>
+
+
+                    </ng-container>
+
+
+
+
+
+
+                    
+                </div>
+            </ng-container>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,108 @@
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-hidden">
+    <mat-drawer-container class="flex-auto h-full bg-card dark:bg-transparent" (backdropClick)="onBackdropClicked()">
+        <mat-drawer class="w-full sm:w-100 dark:bg-gray-900" [mode]="drawerMode" [opened]="false" [position]="'end'" [disableClose]="true" #matDrawer>
+            <router-outlet></router-outlet>
+        </mat-drawer>
+
+        <mat-drawer-content class="flex flex-col bg-gray-100 dark:bg-transparent">
+
+            <!-- Header -->
+            <div class="flex flex-col sm:flex-row items-start sm:items-center sm:justify-between p-6 sm:py-12 md:px-8 border-b bg-card dark:bg-transparent">
+                <div>
+                    <div class="text-4xl font-extrabold tracking-tight leading-none">File Manager</div>
+                    <div class="flex items-center mt-0.5 font-medium text-secondary">
+                        {{ dataSource.data.length }} files
+                    </div>
+                </div>
+
+                <div class="mt-4 sm:mt-0">
+                    <input type="file" (change)="onFileSelected($event)" class="hidden" #fileInput>
+                    <button mat-flat-button color="primary" (click)="fileInput.click()">
+                        <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                        <span class="ml-2 mr-1">Upload File</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Progress bar -->
+            <div *ngIf="isUploading" class="w-full bg-gray-200 rounded mt-4">
+                <mat-progress-bar [value]="uploadProgress" color="primary"></mat-progress-bar>
+                <div class="text-xs font-medium text-blue-100 text-center mt-2">{{ uploadProgress }}%</div>
+            </div>
+
+            <!-- Success/Alert Messages -->
+            <fuse-alert *ngIf="successMessage" [type]="'success'" [appearance]="'border'">
+                <span fuseAlertTitle>Success</span> {{ successMessage }}
+            </fuse-alert>
+
+            <fuse-alert *ngIf="errorMessage" [type]="'error'" [appearance]="'border'">
+                <span fuseAlertTitle>Error</span> {{ errorMessage }}
+            </fuse-alert>
+
+            <!-- Table for files -->
+            <div class="flex justify-center mt-12 mb-12">
+                <div class="w-full max-w-7xl px-4">
+                    <mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8" style="width: 100%;">
+
+                        <!-- File Name Column -->
+                        <ng-container matColumnDef="fileName">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header> File Name </mat-header-cell>
+                            <mat-cell *matCellDef="let report"> {{ report.fileName }} </mat-cell>
+                        </ng-container>
+
+                        <!-- Load Date Column -->
+                        <ng-container matColumnDef="loadDate">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header> Load Date </mat-header-cell>
+                            <mat-cell *matCellDef="let report"> {{ report.loadDate | date: 'short' }} </mat-cell>
+                        </ng-container>
+
+                        <!-- Created Count Column -->
+                        <ng-container matColumnDef="createdCount">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header> Cards Created </mat-header-cell>
+                            <mat-cell *matCellDef="let report"> {{ report.createdCount }} </mat-cell>
+                        </ng-container>
+
+                        <!-- Updated Count Column -->
+                        <ng-container matColumnDef="updatedCount">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header> Cards Updated </mat-header-cell>
+                            <mat-cell *matCellDef="let report"> {{ report.updatedCount }} </mat-cell>
+                        </ng-container>
+
+                        <!-- Status Column -->
+      <!-- Status Column in Table -->
+      <ng-container matColumnDef="status">
+        <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
+        <mat-cell *matCellDef="let report">
+            <!-- No errors case -->
+            <ng-container *ngIf="!report.errorDetails || report.errorDetails.length === 0">
+                <a [routerLink]="['./details/', report.id]">
+                    <mat-icon color="primary">check_circle</mat-icon> Completed
+                </a>
+            </ng-container>
+    
+            <!-- Errors present case -->
+            <ng-container *ngIf="report.errorDetails && report.errorDetails.length > 0">
+                <a [routerLink]="['./details/', report.id]">
+                    <mat-icon color="warn">warning</mat-icon> View Errors ({{ report.errorDetails.length }})
+                </a>
+            </ng-container>
+        </mat-cell>
+    </ng-container>
+    
+
+                        
+                        
+
+                        <!-- Header and Row Definitions -->
+                        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                    </mat-table>
+
+                    <!-- Paginator -->
+                    <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+                </div>
+            </div>
+
+        </mat-drawer-content>
+    </mat-drawer-container>
+</div>
