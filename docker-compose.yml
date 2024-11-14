@@ -4,7 +4,7 @@ services:
   angular-app:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.angular  # Use the Dockerfile for Angular
     container_name: angular-app
     ports:
       - "4200:80"  # Map port 4200 on your local machine to port 80 of the container
@@ -15,7 +15,9 @@ services:
       - ./frontend:/app  # Optional: If you want live code synchronization during development
 
   nginx:
-    image: nginx:latest
+    build:
+      context: ./  # Assuming the root contains the Dockerfile for Nginx and the necessary files
+      dockerfile: Dockerfile.nginx  # The Dockerfile for Nginx
     container_name: nginx
     ports:
       - "80:80"  # Exposes port 80 of the container to port 80 on your machine
