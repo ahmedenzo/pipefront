@@ -1,29 +1,28 @@
-# Étape 1 : Construction de l'application Angular
+# Step 1: Build Angular app
 FROM node:18 AS build
 
-# Définir le répertoire de travail
 WORKDIR /app
 
-# Copier les fichiers de configuration du projet (package.json et package-lock.json)
+# Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Installer les dépendances
-RUN npm install -f
+# Install dependencies
+RUN npm install
 
-# Copier tout le code de l'application dans le conteneur
+# Copy the rest of the application code
 COPY . .
 
-# Construire l'application Angular pour la production
+# Build the Angular app
 RUN npm run build --prod
 
-# Étape 2 : Serveur de production avec Nginx
+# Step 2: Use Nginx to serve the built app
 FROM nginx:latest
 
-# Copier les fichiers construits d'Angular dans le répertoire de Nginx
+# Copy the build artifacts from the first image
 COPY --from=build /app/dist/ /usr/share/nginx/html
 
-# Exposer le port 80 pour l'application Nginx
+# Expose port 80
 EXPOSE 80
 
-# Démarrer Nginx en mode non-démon
+# Run Nginx in the foreground
 CMD ["nginx", "-g", "daemon off;"]
