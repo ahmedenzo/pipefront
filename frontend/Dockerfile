@@ -7,24 +7,24 @@ WORKDIR /app
 # Copy package.json and package-lock.json for installing dependencies
 COPY package*.json ./
 
-# Install the app dependencies
-RUN npm install -f
+# Install the app dependencies using npm ci for faster and more reliable installs
+RUN npm ci
 
 # Copy the rest of the application code
 COPY . .
 
-# Build the Angular app for production
+# Build the Angular app for production (ensure your angular.json config is correct)
 RUN npm run build --prod
 
 # Step 2: Use Nginx to serve the Angular app
 FROM nginx:latest
 
 # Copy the custom Nginx configuration file (if any)
+# Ensure nginx.conf is in the same directory as the Dockerfile or provide the correct relative path
 COPY nginx.conf /etc/nginx/nginx.conf
 
 # Copy the built Angular app from the Angular build container
-# The Angular build output is located in /app/dist/your-angular-app
-COPY --from=build /app/dist/your-angular-app /usr/share/nginx/html
+COPY --from=build /app/dist/Pinsender /usr/share/nginx/html
 
 # Expose port 80 so that Nginx can serve the app
 EXPOSE 80
