@@ -12,7 +12,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 // Build the Docker image
-                sh 'docker build -t pipefront-angular-nginx .'
+                sh 'docker build -t pipefront-angular-nginx -f frontend/Dockerfile .'
             }
         }
 
