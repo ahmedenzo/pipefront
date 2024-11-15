@@ -4,36 +4,46 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                // Replace with your repository details
+                // Clone the repository
                 git url: 'https://github.com/ahmedenzo/pipefront.git', branch: 'master'
             }
         }
 
-        stage('Build Docker Images') {
+        stage('Build Docker Image') {
             steps {
-                // Build the Docker images
-                sh 'docker-compose build'
+                // Build the Docker image
+                sh 'docker build -t pipefront-angular-nginx .'
             }
         }
 
-        stage('Save Docker Images Locally') {
+        stage('Save Docker Image Locally') {
             steps {
-                // Save the Angular image
-                sh 'docker save -o angular-app.tar pipefront_angular-app:latest'
-                // Save the Nginx image
-                sh 'docker save -o nginx.tar pipefront_nginx:latest'
-                // Archive the images
-                archiveArtifacts artifacts: '*.tar', allowEmptyArchive: false
+                // Save the image locally (optional if you need to keep it on the Jenkins server)
+                sh 'docker save -o angular-nginx-app.tar pipefront-angular-nginx:latest'
+                
+                // Archive the image as an artifact
+                archiveArtifacts artifacts: 'angular-nginx-app.tar', allowEmptyArchive: false
+            }
+        }
+
+        stage('Push Docker Image to Registry') {
+            steps {
+                script {
+                    // Push the Docker image to DockerHub or any other registry
+                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-credentials') {
+                        sh 'docker push pipefront-angular-nginx:latest'
+                    }
+                }
             }
         }
     }
 
     post {
         success {
-            echo 'Docker images built and saved successfully!'
+            echo 'Docker image built, saved, and pushed successfully!'
         }
         failure {
-            echo 'Failed to build or save Docker images.'
+            echo 'Failed to build, save, or push Docker image.'
         }
     }
 }

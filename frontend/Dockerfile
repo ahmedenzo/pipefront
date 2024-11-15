@@ -16,5 +16,18 @@ COPY . .
 # Build the Angular app for production
 RUN npm run build --prod
 
-# The output will be in the dist folder, which is the default output directory for Angular.
-# This folder will be needed for Nginx to serve the app.
+# Step 2: Use Nginx to serve the Angular app
+FROM nginx:latest
+
+# Copy the custom Nginx configuration file (if any)
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# Copy the built Angular app from the Angular build container
+# The Angular build output is located in /app/dist/your-angular-app
+COPY --from=build /app/dist/your-angular-app /usr/share/nginx/html
+
+# Expose port 80 so that Nginx can serve the app
+EXPOSE 80
+
+# Run Nginx in the foreground (this will keep the container running)
+CMD ["nginx", "-g", "daemon off;"]
