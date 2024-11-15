@@ -4,7 +4,7 @@ services:
   angular-app:
     build:
       context: ./frontend  # Path to your Angular project directory
-      dockerfile: Dockerfile.node  # Dockerfile for building the Angular app
+      dockerfile: Dockerfile  # Dockerfile for building the Angular app
     container_name: angular-app
     networks:
       - my_network
