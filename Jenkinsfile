@@ -18,20 +18,20 @@ pipeline {
 
         stage('Save Docker Image Locally') {
             steps {
-                // Save the image locally (optional if you need to keep it on the Jenkins server)
-                sh 'docker save -o angular-nginx-app.tar pipefront-angular-nginx:latest'
+                // Save the image to a tar file (for transfer)
+                sh 'docker save -o pipefront-angular-nginx.tar pipefront-angular-nginx:latest'
                 
-                // Archive the image as an artifact
-                archiveArtifacts artifacts: 'angular-nginx-app.tar', allowEmptyArchive: false
+                // Archive the image as an artifact in Jenkins (optional, for keeping within Jenkins)
+                archiveArtifacts artifacts: 'pipefront-angular-nginx.tar', allowEmptyArchive: false
             }
         }
 
-        stage('Push Docker Image to Registry') {
+        stage('Push Docker Image to Local Registry') {
             steps {
                 script {
-                    // Push the Docker image to DockerHub or any other registry
-                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-credentials') {
-                        sh 'docker push pipefront-angular-nginx:latest'
+                    // Push the Docker image to a local registry if needed (optional, use if registry required)
+                    docker.withRegistry('http://localhost:5000', 'local-registry-credentials') {
+                        sh 'docker push localhost:5000/pipefront-angular-nginx:latest'
                     }
                 }
             }
