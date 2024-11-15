@@ -20,7 +20,7 @@ RUN npm run build --prod
 FROM nginx:latest
 
 # Copy the custom Nginx configuration file (if any)
-COPY ../nginx.conf /etc/nginx/nginx.conf
+COPY nginx.conf /etc/nginx/nginx.conf
 
 # Copy the built Angular app from the Angular build container
 # The Angular build output is located in /app/dist/your-angular-app
