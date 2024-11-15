@@ -29,10 +29,14 @@ pipeline {
         stage('Push Docker Image to Local Registry') {
             steps {
                 script {
-                    // Push the Docker image to a local registry if needed (optional, use if registry required)
-                    docker.withRegistry('http://localhost:5000', 'local-registry-credentials') {
-                        sh 'docker push localhost:5000/pipefront-angular-nginx:latest'
-                    }
+                    // Ensure the local registry is running (this step assumes Docker is set up on localhost:5000)
+                    sh 'docker run -d -p 5000:5000 --name registry registry:2' // Uncomment if you need to start the local registry
+
+                    // Tag the image for the local registry
+                    sh 'docker tag pipefront-angular-nginx localhost:5000/pipefront-angular-nginx:latest'
+
+                    // Push the Docker image to the local registry
+                    sh 'docker push localhost:5000/pipefront-angular-nginx:latest'
                 }
             }
         }
@@ -40,7 +44,7 @@ pipeline {
 
     post {
         success {
-            echo 'Docker image built, saved, and pushed successfully!'
+            echo 'Docker image built, saved, and pushed to local registry successfully!'
         }
         failure {
             echo 'Failed to build, save, or push Docker image.'
