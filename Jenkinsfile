@@ -2,26 +2,27 @@ pipeline {
     agent any
 
     stages {
-        stage('Cloner le dépôt') {
+        stage('Clone Repository') {
             steps {
-                // Clone the repository. Replace with the correct repository URL if necessary.
+                // Replace with your repository details
                 git url: 'https://github.com/ahmedenzo/pipefront.git', branch: 'master'
             }
         }
 
-        stage('Construire les images Docker') {
+        stage('Build Docker Images') {
             steps {
-                // Build the Docker images using docker-compose (without launching containers)
+                // Build the Docker images
                 sh 'docker-compose build'
             }
         }
 
-        stage('Sauvegarder les images en local') {
+        stage('Save Docker Images Locally') {
             steps {
-                // Save the Docker images to tar files
-                sh 'docker save -o angular-app.tar pipefront-angular-app:latest'  // Save the Angular image
-                sh 'docker save -o nginx.tar nginx:latest'              // Save the Nginx image
-                // Archive the tar files as artifacts
+                // Save the Angular image
+                sh 'docker save -o angular-app.tar pipefront_angular-app:latest'
+                // Save the Nginx image
+                sh 'docker save -o nginx.tar pipefront_nginx:latest'
+                // Archive the images
                 archiveArtifacts artifacts: '*.tar', allowEmptyArchive: false
             }
         }
@@ -29,10 +30,10 @@ pipeline {
 
     post {
         success {
-            echo 'Construction et sauvegarde des images réussies !'
+            echo 'Docker images built and saved successfully!'
         }
         failure {
-            echo 'Échec de la construction ou de la sauvegarde des images.'
+            echo 'Failed to build or save Docker images.'
         }
     }
 }

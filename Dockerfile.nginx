@@ -1,11 +1,9 @@
-# Step 2: Use Nginx to serve the built app
 FROM nginx:latest
 
-# Copy the build artifacts from the Angular build image
-COPY --from=build /app/dist/ /usr/share/nginx/html
+# Copy Angular build artifacts from the shared volume
+COPY ./frontend/dist/ /usr/share/nginx/html
 
 # Expose port 80
 EXPOSE 80
 
-# Run Nginx in the foreground
 CMD ["nginx", "-g", "daemon off;"]
