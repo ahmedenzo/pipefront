@@ -9,7 +9,7 @@ services:
     networks:
       - my_network
     volumes:
-      - ./frontend/dist:/app/dist  # Map the build output directory
+      - ./frontend/dist:/app/dist  # Map the build output directory (build the app)
 
   nginx:
     build:
@@ -20,9 +20,9 @@ services:
       - "80:80"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf  # Map custom Nginx config
-      - ./frontend/dist:/usr/share/nginx/html  # Serve the Angular app from Nginx
+      - ./frontend/dist:/usr/share/nginx/html  # Serve the Angular app from Nginx (this will use the dist folder after build)
     depends_on:
-      - angular-app  # Ensure Nginx starts after Angular build
+      - angular-app  # Ensure Nginx starts after Angular build is complete
     networks:
       - my_network
 
