@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install the app dependencies using npm ci for faster and more reliable installs
-RUN npm ci
+RUN npm install -f
 
 # Copy the rest of the application code
 COPY . .
