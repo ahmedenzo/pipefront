@@ -9,7 +9,7 @@ services:
     networks:
       - my_network
     volumes:
-      - ./frontend/dist:/app/dist  # Map the build output directory
+      - ./frontend/dist:/app/dist  # After build, this will map the dist folder to the host
 
   nginx:
     build:
