@@ -4,6 +4,7 @@ services:
   angular-app:
     build:
       context: ./frontend
+      dockerfile: Dockerfile
     container_name: angular-app
     networks:
       - my_network
@@ -11,6 +12,7 @@ services:
   nginx:
     build:
       context: .
+      dockerfile: Dockerfile.nginx
     container_name: nginx
     ports:
       - "80:80"
