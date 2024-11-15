@@ -3,18 +3,18 @@ version: '3.8'
 services:
   angular-app:
     build:
-      context: ./frontend
-      dockerfile: Dockerfile
+      context: ./frontend  # Path to your Angular project directory
+      dockerfile: Dockerfile.node  # Dockerfile for building the Angular app
     container_name: angular-app
     networks:
       - my_network
     volumes:
-      - ./frontend/dist:/app/dist  # After build, this will map the dist folder to the host
+      - ./frontend/dist:/app/dist  # Map the build output directory
 
   nginx:
     build:
-      context: .
-      dockerfile: Dockerfile.nginx
+      context: .  # Path to the directory containing Dockerfile.nginx
+      dockerfile: Dockerfile.nginx  # Dockerfile for serving the Angular app
     container_name: nginx
     ports:
       - "80:80"
@@ -23,7 +23,6 @@ services:
       - ./frontend/dist:/usr/share/nginx/html  # Serve the Angular app from Nginx
     depends_on:
       - angular-app  # Ensure Nginx starts after Angular build
-    restart: unless-stopped
     networks:
       - my_network
 
